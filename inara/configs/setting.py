@@ -8,4 +8,5 @@ class Settings(BaseSettings):
     log_level: str = "INFO"
     embed_collector: bool = True
 
+
 settings = Settings()
