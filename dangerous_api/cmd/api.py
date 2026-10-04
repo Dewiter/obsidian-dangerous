@@ -3,12 +3,12 @@ from contextlib import asynccontextmanager, suppress
 
 from fastapi import FastAPI
 
-from inara.bootstrap.container import commodity_service
-from inara.client import eddn
-from inara.configs.setting import settings
-from inara.controller.eddn.commodity import run as run_collector
-from inara.controller.rest.router import api_router
-from inara.pkg.logging import setup_logging
+from dangerous_api.bootstrap.container import commodity_service
+from dangerous_api.client import eddn
+from dangerous_api.configs.setting import settings
+from dangerous_api.controller.eddn.commodity import run as run_collector
+from dangerous_api.controller.rest.router import api_router
+from dangerous_api.pkg.logging import setup_logging
 
 
 @asynccontextmanager
@@ -27,7 +27,7 @@ async def lifespan(app: FastAPI):
 
 def create_app() -> FastAPI:
     setup_logging(settings.log_level)
-    app = FastAPI(title="Inara", lifespan=lifespan)
+    app = FastAPI(title="Dangerous API", lifespan=lifespan)
     app.include_router(api_router)
     return app
 

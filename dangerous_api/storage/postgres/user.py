@@ -3,8 +3,8 @@ import uuid
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from inara.domain.user import FrontierAccount, User
-from inara.storage.postgres.models import FrontierAccountRow, UserRow
+from dangerous_api.domain.user import FrontierAccount, User
+from dangerous_api.storage.postgres.models import FrontierAccountRow, UserRow
 
 
 def _to_domain(row: UserRow) -> User:

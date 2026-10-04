@@ -1,7 +1,7 @@
 import uuid
 from typing import Protocol
 
-from inara.domain.user import FrontierAccount, User
+from dangerous_api.domain.user import FrontierAccount, User
 
 
 class UserRepository(Protocol):

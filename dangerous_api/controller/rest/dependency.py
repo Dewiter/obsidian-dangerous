@@ -2,8 +2,8 @@ from typing import Annotated
 
 from fastapi import Depends
 
-from inara.bootstrap.container import commodity_service
-from inara.service.commodity import CommodityService
+from dangerous_api.bootstrap.container import commodity_service
+from dangerous_api.service.commodity import CommodityService
 
 
 def get_commodity_service() -> CommodityService:

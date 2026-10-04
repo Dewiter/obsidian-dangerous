@@ -1,7 +1,7 @@
 from functools import lru_cache
 
-from inara.service.commodity import CommodityService
-from inara.storage.memory.commodity import InMemoryCommodityRepository
+from dangerous_api.service.commodity import CommodityService
+from dangerous_api.storage.memory.commodity import InMemoryCommodityRepository
 
 
 @lru_cache

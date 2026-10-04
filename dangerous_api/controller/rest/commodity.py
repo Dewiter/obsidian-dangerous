@@ -3,7 +3,7 @@ from datetime import datetime
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, ConfigDict
 
-from inara.controller.rest.dependency import CommodityServiceDep
+from dangerous_api.controller.rest.dependency import CommodityServiceDep
 
 router = APIRouter(prefix="/commodities", tags=["commodities"])
 

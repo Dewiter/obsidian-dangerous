@@ -6,8 +6,8 @@ from sqlalchemy import pool
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
-from inara.configs.setting import settings
-from inara.storage.postgres.models import Base
+from dangerous_api.configs.setting import settings
+from dangerous_api.storage.postgres.models import Base
 
 config = context.config
 config.set_main_option("sqlalchemy.url", settings.database_url)
@@ -16,6 +16,7 @@ if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
 target_metadata = Base.metadata
+
 
 
 def run_migrations_offline() -> None:

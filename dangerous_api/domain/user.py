@@ -2,8 +2,6 @@ import uuid
 from dataclasses import dataclass
 from datetime import datetime
 
-from inara.domain.commander import Commander
-
 
 @dataclass(frozen=True)
 class FrontierAccount:

@@ -4,7 +4,7 @@ from datetime import datetime
 from sqlalchemy import BigInteger, DateTime, ForeignKey, String, func
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
-from inara.domain.user import FrontierAccount
+from dangerous_api.domain.user import FrontierAccount
 
 TZ = DateTime(timezone=True)
 

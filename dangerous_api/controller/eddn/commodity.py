@@ -2,8 +2,8 @@ import logging
 from collections.abc import AsyncIterable
 from datetime import datetime
 
-from inara.domain.commodity import CommodityPrice
-from inara.service.commodity import CommodityService
+from dangerous_api.domain.commodity import CommodityPrice
+from dangerous_api.service.commodity import CommodityService
 
 log = logging.getLogger(__name__)
 

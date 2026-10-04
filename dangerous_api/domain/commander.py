@@ -1,7 +1,7 @@
 import uuid
 from dataclasses import dataclass
 
-from inara.domain.ship import Ship
+from dangerous_api.domain.ship import Ship
 
 
 @dataclass(frozen=True)
