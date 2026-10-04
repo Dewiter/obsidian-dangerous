@@ -1,24 +1,51 @@
-import os
-
-from dotenv import load_dotenv
+from pydantic import computed_field
 from pydantic_settings import BaseSettings, SettingsConfigDict
-
-load_dotenv()
 
 
 class Settings(BaseSettings):
-    model_config = SettingsConfigDict(env_prefix="Dangerous_API_", env_file=".env")
-
-    eddn_url: str = "tcp://eddn.edcd.io:9500"
-    log_level: str = "INFO"
-    embed_collector: bool = True
-    database_url: str = (
-        "postgresql+asyncpg://dangerous:dangerous@localhost:5432/dangerous"
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        extra="ignore",
     )
-    secret = os.getenv("DANGEROUS_API_JWT_SECRET")
-    if secret:
-        jwt_secret: str = secret
-    jwt_expires_in: int = 60
+
+    # Host
+    host_app_name: str
+    host_mode: str
+    host_address: str
+    host_port: int
+    app_prefix: str
+
+    # Logging
+    log_level: str = "INFO"
+
+    # Application
+    embed_collector: bool = True
+
+    # EDDN
+    eddn_host: str
+    eddn_net: str
+    eddn_port: int
+
+    # Database
+    db_host: str
+    db_port: int
+    db_net: str
+    db_base: str
+
+    # JWT
+    jwt_secret: str | None = None
+    jwt_duration: int = 60
+    jwt_refresh: int = 90
+
+    @computed_field
+    @property
+    def eddn_url(self) -> str:
+        return f"{self.eddn_net}://{self.eddn_host}:{self.eddn_port}"
+
+    @computed_field
+    @property
+    def database_url(self) -> str:
+        return f"{self.db_net}://{self.db_host}:{self.db_port}{self.db_base}"
 
 
 settings = Settings()
