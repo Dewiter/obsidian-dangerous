@@ -18,11 +18,15 @@ lint:
 
 # --- database ---
 db-up:
-  docker run -d --name dangerous-db -e POSTGRES_USER=dangerous -e POSTGRES_PASSWORD=dangerous \
-    -e POSTGRES_DB=dangerous -p 5432:5432 -v dangerous-pgdata:/var/lib/postgresql/data postgres:17
+  docker start dangerous-db || docker run -d --name dangerous-db \
+    -e POSTGRES_USER=dangerous -e POSTGRES_PASSWORD=dangerous \
+    -e POSTGRES_DB=dangerous -p 5432:5432 \
+    -v dangerous-pgdata:/var/lib/postgresql/data postgres:17
 
 db-down:
   docker rm -f dangerous-db
+db-start:
+  docker start dangerous-db
 
 # usage: just revision "add commanders table"
 revision msg:

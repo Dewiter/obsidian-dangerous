@@ -1,8 +1,10 @@
 import uuid
 
 from sqlalchemy import select
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from dangerous_api.domain.errors import UserAlreadyExists
 from dangerous_api.domain.user import FrontierAccount, User
 from dangerous_api.storage.postgres.models import FrontierAccountRow, UserRow
 
@@ -35,9 +37,13 @@ class SqlUserRepository:
                 password_hash=user.password_hash,
             )
         )
-        await self.session.commit()
+        try:
+            await self.session.commit()
+        except IntegrityError as error:
+            await self.session.rollback()
+            raise UserAlreadyExists from error
 
-    async def get(self, user_id: str) -> User | None:
+    async def get(self, user_id: uuid.UUID) -> User | None:
         row = await self.session.get(UserRow, user_id)
         return _to_domain(row) if row else None
 
@@ -45,11 +51,15 @@ class SqlUserRepository:
         row = await self.session.scalar(select(UserRow).where(UserRow.login == login))
         return _to_domain(row) if row else None
 
-    async def get_by_frontier_id(self, frontier_id: str) -> User | None:
+    async def get_by_email(self, email: str) -> User | None:
+        row = await self.session.scalar(select(UserRow).where(UserRow.email == email))
+        return _to_domain(row) if row else None
+
+    async def get_by_frontier_id(self, frontier_id: int) -> User | None:
         row = await self.session.scalar(
             select(UserRow)
             .join(FrontierAccountRow)
-            .where(FrontierAccountRow.user_id == frontier_id)
+            .where(FrontierAccountRow.frontier_id == frontier_id)
         )
         return _to_domain(row) if row else None
 
