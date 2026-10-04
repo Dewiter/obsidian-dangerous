@@ -4,24 +4,10 @@ from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from dangerous_api.domain.errors import UserAlreadyExists
+from dangerous_api.domain.errors import FrontierAlreadyLinked, UserAlreadyExists
 from dangerous_api.domain.user import FrontierAccount, User
 from dangerous_api.storage.postgres.models import FrontierAccountRow, UserRow
-
-
-def _to_domain(row: UserRow) -> User:
-    f = row.frontier
-    return User(
-        id=row.id,
-        login=row.login,
-        email=row.email,
-        password_hash=row.password_hash,
-        frontier=FrontierAccount(
-            f.frontier_id, f.access_token, f.refresh_token, f.expires_at
-        )
-        if f
-        else None,
-    )
+from dangerous_api.storage.postgres.user.mapper import to_domain
 
 
 class SqlUserRepository:
@@ -45,15 +31,15 @@ class SqlUserRepository:
 
     async def get(self, user_id: uuid.UUID) -> User | None:
         row = await self.session.get(UserRow, user_id)
-        return _to_domain(row) if row else None
+        return to_domain(row) if row else None
 
     async def get_by_login(self, login: str) -> User | None:
         row = await self.session.scalar(select(UserRow).where(UserRow.login == login))
-        return _to_domain(row) if row else None
+        return to_domain(row) if row else None
 
     async def get_by_email(self, email: str) -> User | None:
         row = await self.session.scalar(select(UserRow).where(UserRow.email == email))
-        return _to_domain(row) if row else None
+        return to_domain(row) if row else None
 
     async def get_by_frontier_id(self, frontier_id: int) -> User | None:
         row = await self.session.scalar(
@@ -61,7 +47,7 @@ class SqlUserRepository:
             .join(FrontierAccountRow)
             .where(FrontierAccountRow.frontier_id == frontier_id)
         )
-        return _to_domain(row) if row else None
+        return to_domain(row) if row else None
 
     async def link_frontier(self, user_id: uuid.UUID, account: FrontierAccount) -> None:
         await self.session.merge(
@@ -73,4 +59,8 @@ class SqlUserRepository:
                 expires_at=account.expires_at,
             )
         )
-        await self.session.commit()
+        try:
+            await self.session.commit()
+        except IntegrityError as error:
+            await self.session.rollback()
+            raise FrontierAlreadyLinked from error
