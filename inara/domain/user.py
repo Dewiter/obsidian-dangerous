@@ -18,6 +18,6 @@ class User:
     id: uuid.UUID
     login: str
     email: str
-    password: str
-    commander: Commander
+    password_hash: str
+    # commander: Commander
     frontier: FrontierAccount | None = None

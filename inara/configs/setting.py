@@ -7,6 +7,7 @@ class Settings(BaseSettings):
     eddn_url: str = "tcp://eddn.edcd.io:9500"
     log_level: str = "INFO"
     embed_collector: bool = True
+    database_url: str = "postgresql+asyncpg://inara:inara@localhost:5432/inara"
 
 
 settings = Settings()
