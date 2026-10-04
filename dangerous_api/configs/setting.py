@@ -18,7 +18,6 @@ class Settings(BaseSettings):
     secret = os.getenv("DANGEROUS_API_JWT_SECRET")
     if secret:
         jwt_secret: str = secret
-
     jwt_expires_in: int = 60
 
 
